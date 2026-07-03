@@ -60,6 +60,15 @@ impl AnkiError {
         }
     }
 
+    pub(crate) fn network_offline(info: impl Into<String>) -> Self {
+        AnkiError::NetworkError {
+            source: NetworkError {
+                info: info.into(),
+                kind: NetworkErrorKind::Offline,
+            },
+        }
+    }
+
     pub(crate) fn server_message<S: Into<String>>(msg: S) -> AnkiError {
         AnkiError::sync_error(msg, SyncErrorKind::ServerMessage)
     }

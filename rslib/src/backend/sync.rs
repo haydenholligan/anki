@@ -20,6 +20,7 @@ use crate::sync::collection::status::online_sync_status_check;
 use crate::sync::http_client::HttpSyncClient;
 use crate::sync::login::sync_login;
 use crate::sync::login::SyncAuth;
+use crate::sync::network::ensure_internet_connection_available;
 
 #[derive(Default)]
 pub(super) struct SyncState {
@@ -331,6 +332,7 @@ impl Backend {
 
         // fetch and cache result
         let auth = input.try_into()?;
+        ensure_internet_connection_available(&auth)?;
         let rt = self.runtime_handle();
         let time_at_check_begin = TimestampSecs::now();
         let local = self.with_col(|col| col.sync_meta())?;
@@ -356,6 +358,7 @@ impl Backend {
         input: anki_proto::sync::SyncCollectionRequest,
     ) -> Result<anki_proto::sync::SyncCollectionResponse> {
         let auth: SyncAuth = input.auth.or_invalid("missing auth")?.try_into()?;
+        ensure_internet_connection_available(&auth)?;
         let (_guard, abort_reg) = self.sync_abort_handle()?;
 
         let rt = self.runtime_handle();

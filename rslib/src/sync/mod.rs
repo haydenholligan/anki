@@ -7,6 +7,7 @@ pub mod http_client;
 pub mod http_server;
 pub mod login;
 pub mod media;
+pub(crate) mod network;
 pub mod request;
 pub mod response;
 pub mod version;
